@@ -1,0 +1,58 @@
+<%-include ("header")-%>
+
+<body class="sub_page">
+    <div class="hero_area">
+        <%-include ("nav-bar")-%>
+    </div>
+    <!-- food section -->
+    <section class="food_section layout_padding">
+        <div class="container">
+            <div class="heading_container heading_center">
+                <h2>
+                    Your Order
+                </h2>
+            </div>
+            <section class="cart container py-5">
+                <div class="container mt-2 text-center">
+                    <h4>Payment</h4>
+                    <h2>Total: $<%=total%></h2>
+                    <div id="paypal-button-container"></div>
+                </div>
+            </section>
+        </div>
+    </section>
+    <!-- end food section -->
+<%-include("footer")-%>
+
+<!-- Replace "test" with your own sandbox Business account app client ID -->
+<script src="https://www.paypal.com/sdk/js?client-id=ATVhEAMMAjIt6ystUYDvR3AhuYYckZ_DLkcmEt7bkruwC8DRdiFCWpVWtFiqNpGlYwQObDm_H-XJ02rT&currency=USD"></script>
+<!-- Set up a container element for the button -->
+<div id="paypal-button-container"></div>
+<script>
+    paypal.Buttons({
+        // Sets up the transaction when a payment button is clicked
+        createOrder: (data, actions) => {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '<%=total%>' // Can also reference a variable or function
+                    }
+                }]
+            });
+        },
+        // Finalize the transaction after payer approval
+        onApprove: (data, actions) => {
+            return actions.order.capture().then(function (orderData) {
+                // Successful capture! For dev/demo purposes:
+                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                const transaction = orderData.purchase_units[0].payments.captures[0];
+                alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+                // When ready to go live, remove the alert and show a success message within this page. For example:
+                // const element = document.getElementById('paypal-button-container');
+                // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                // Or go to another URL:  actions.redirect('thank_you.html');
+                window.location.href="/verify_payment?transaction_id="+transaction.id;
+            });
+        }
+    }).render('#paypal-button-container');
+</script>

@@ -1,0 +1,93 @@
+<%-include ("header")-%>
+
+<body class="sub_page">
+    <div class="hero_area">
+        <%-include ("nav-bar")-%>
+    </div>
+
+    <!-- food section -->
+
+    <section class="food_section layout_padding">
+        <div class="container">
+            <div class="heading_container heading_center">
+                <h2>
+                    Your Order
+                </h2>
+            </div>
+            <section class="cart container py-5">
+                <div class="container">
+                    <h4>Your Order</h4>
+                </div>
+                <table class="pt-5">
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                    </tr>
+                    <%if(cart){%>
+                    <%cart.forEach(item=>{%>
+                    <tr>
+                        <td>
+                            <div class="product-info">
+                                <img style="width: 75px; height: 75px" src="images/<%=item.image%>">
+                                <div>
+                                    <p><%=item.name%></p>
+                                    <small><span>$</span>
+                                        <%if(item.sale_price){%>
+                                            <%=item.sale_price%>
+                                        <%}else{%>
+                                            <%=item.price%>
+                                        <%}%>
+                                    </small>
+                                    <br>
+                                    <form method="post" action="/remove_product">
+                                        <input type="hidden" name="id" value="<%=item.id%>">
+                                        <input type="submit" name="remove_btn" class="remove-btn" value="remove">
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <form method="post" action="/edit_product_quantity">
+                                <input type="hidden" name="id" value="<%=item.id%>">
+                                <input type="submit" value="-" class="edit-btn " name="decrease_product_quantity_btn">
+                                <input type="text" name="quantity" value="<%=item.quantity%>" readonly="">
+                                <input type="submit" value="+" class="edit-btn" name="increase_product_quantity_btn">
+                            </form>
+                        </td>
+
+                        <td>
+                            <span class="product-price">$
+                                <%if(item.sale_price){%>
+                                    <%=(item.sale_price*item.quantity).toFixed(2)%>
+                                <%}else{%>
+                                    <%=(item.price*item.quantity).toFixed(2)%>
+                                <%}%>
+                            </span>
+                        </td>
+                    </tr>
+                    <%})}%>
+                </table>
+                <div class="cart-total">
+                    <table>
+                        <tr>
+                            <td>Total</td>
+                            <td><%=total%></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="checkout-container">
+                    <form method="get" action="/checkout">
+                        <input type="submit" class="btn checkout-btn" value="Checkout" name="">
+                    </form>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <!-- end food section -->
+    
+<%-include("footer")-%>
+    

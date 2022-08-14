@@ -1,0 +1,70 @@
+<%-include("header")-%>
+
+<body class="sub_page">
+    <div class="hero_area">
+        <%-include ("nav-bar")-%>
+    </div>
+    <!-- food section -->
+
+    <section class="food_section layout_padding">
+        <div class="container">
+            <div class="heading_container heading_center">
+                <h2>
+                    Our Menu
+                </h2>
+            </div>
+
+            <div class="filters-content">
+                <div class="row grid">
+                    <% result.forEach(item => {%>
+                       <div class="col-sm-12 col-lg-12 all <%=item.category%>">
+                         <div class="box">
+                           <div>
+                               <div class="img-box">
+                                 <img src="images/<%=item.image%>"%> alt="">
+                               </div>
+                               <div class="detail-box">
+                                  <h5><%=item.name%></h5>
+                                  <p><%=item.description%></p>
+                                 <div class="options">
+                                    <%if(item.sale_price){%>
+                                       <h6>$<%=item.sale_price%></h6>
+                                       <h6 style="text-decoration: line-through;">
+                                         $<%=item.price%>
+                                       </h6>
+                                    <%}else{%>
+                                         <h6>$<%=item.price%></h6>
+                                    <%}%>
+                                    <form action="/add_to_cart" method="post">
+                                       <input type="hidden" name="id" value="<%=item.id%>">
+                                       <input type="hidden" name="name" value="<%=item.name%>">
+                                       <input type="hidden" name="price" value="<%=item.price%>">
+                                       <input type="hidden" name="sale_price" value="<%=item.sale_price%>">
+                                       <input type="hidden" name="quantity" value="1">
+                                       <input type="hidden" name="image" value="<%=item.image%>">
+                                       <button type="submit" style="background: none; border: none">
+                                           <a>
+                                             <%-include ("svg")-%>
+                                           </a>
+                                       </button>
+                                       
+                                    </form>
+                                 </div>
+                               </div>
+                           </div>
+                         </div>
+                       </div>
+                     <%})%>
+                </div>
+            </div>
+            <div class="btn-box">
+                <a href="/products">
+                    Other Meals
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- end food section -->
+
+<%-include("footer")-%>
